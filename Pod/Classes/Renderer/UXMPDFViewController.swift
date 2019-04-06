@@ -9,7 +9,7 @@
 import UIKit
 import SafariServices
 
-open class PDFViewController: UIViewController {
+open class UXMPDFViewController: UIViewController {
     
     /// A boolean value that determines whether the navigation bar and scrubber bar hide on screen tap
     open var hidesBarsOnTap: Bool = true
@@ -40,7 +40,7 @@ open class PDFViewController: UIViewController {
     open var scrollDirection: UICollectionView.ScrollDirection = .horizontal
     
     /// A reference to the document that is being displayed
-    var document: PDFDocument!
+    var document: UXMPDFDocument!
     
     /// A reference to the share button
     var shareBarButtonItem: UIBarButtonItem?
@@ -69,7 +69,7 @@ open class PDFViewController: UIViewController {
      
      - Returns: An instance of the PDFViewController
      */
-    public init(document: PDFDocument) {
+    public init(document: UXMPDFDocument) {
         super.init(nibName: nil, bundle: nil)
         self.document = document
     }
@@ -83,7 +83,7 @@ open class PDFViewController: UIViewController {
      
      - Returns: An instance of the PDFViewController
      */
-    public convenience init(document: PDFDocument, annotationController: PDFAnnotationController) {
+    public convenience init(document: UXMPDFDocument, annotationController: PDFAnnotationController) {
         self.init(document: document)
         self.annotationController = PDFAnnotationController(document: self.document, delegate: self)
     }
@@ -189,7 +189,7 @@ open class PDFViewController: UIViewController {
             navigationItem.leftBarButtonItem = UIBarButtonItem(title: "Done",
                                                                style: .plain,
                                                                target: self,
-                                                               action: #selector(PDFViewController.dismissModal))
+                                                               action: #selector(UXMPDFViewController.dismissModal))
         }
     }
     
@@ -202,7 +202,7 @@ open class PDFViewController: UIViewController {
                 image: UIImage.bundledImage("share"),
                 toggled: false,
                 target: self,
-                action: #selector(PDFViewController.shareDocument)
+                action: #selector(UXMPDFViewController.shareDocument)
             )
             buttons.append(shareFormBarButtonItem)
             self.shareBarButtonItem = shareFormBarButtonItem
@@ -212,7 +212,7 @@ open class PDFViewController: UIViewController {
             image: UIImage.bundledImage("thumbs"),
             toggled: false,
             target: self,
-            action: #selector(PDFViewController.showThumbnailView)
+            action: #selector(UXMPDFViewController.showThumbnailView)
             )
         )
         
@@ -229,7 +229,7 @@ open class PDFViewController: UIViewController {
                 image: UIImage.bundledImage("annot"),
                 toggled: showingAnnotations,
                 target: self,
-                action: #selector(PDFViewController.toggleAnnotations(_:))
+                action: #selector(UXMPDFViewController.toggleAnnotations(_:))
                 )
             )
         }
@@ -305,7 +305,7 @@ open class PDFViewController: UIViewController {
     }
 }
 
-extension PDFViewController: PDFAnnotationControllerProtocol {
+extension UXMPDFViewController: PDFAnnotationControllerProtocol {
     public func annotationWillStart(touch: UITouch) -> Int? {
         let tapPoint = touch.location(in: collectionView)
         guard let pageIndex = collectionView.indexPathForItem(at: tapPoint)?.row else { return nil }
@@ -314,13 +314,13 @@ extension PDFViewController: PDFAnnotationControllerProtocol {
 }
 
 
-extension PDFViewController: PDFPageScrubberDelegate {
+extension UXMPDFViewController: PDFPageScrubberDelegate {
     public func scrubber(_ scrubber: PDFPageScrubber, selectedPage: Int) {
         self.scrollTo(page: selectedPage)
     }
 }
 
-extension PDFViewController: PDFSinglePageViewerDelegate {
+extension UXMPDFViewController: PDFSinglePageViewerDelegate {
     public func singlePageViewer(_ collectionView: PDFSinglePageViewer, didDisplayPage page: Int) {
         document.currentPage = page
         if showsScrubber {
@@ -366,7 +366,7 @@ extension PDFViewController: PDFSinglePageViewerDelegate {
     public func singlePageViewerDidEndDragging() { }
 }
 
-extension PDFViewController: PDFThumbnailViewControllerDelegate {
+extension UXMPDFViewController: PDFThumbnailViewControllerDelegate {
     public func thumbnailCollection(_ collection: PDFThumbnailViewController, didSelect page: Int) {
         self.scrollTo(page: page)
         self.dismiss(animated: true, completion: nil)
